@@ -1,5 +1,6 @@
 cd backend
 pip3 install -r requirements
+python -m flask run
 
 cd frontend
 npm install
