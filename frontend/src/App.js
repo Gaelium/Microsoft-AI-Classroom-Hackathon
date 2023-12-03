@@ -1,4 +1,13 @@
-import logo from "./logo.svg";
+import { useEffect } from "react";
+import { Routes, Route } from "react-router-dom";
+import { MsalProvider, useMsal } from "@azure/msal-react";
+import { EventType } from "@azure/msal-browser";
+
+import { PageLayout } from "./components/PageLayout";
+import { Home } from "./pages/Home";
+import { b2cPolicies, protectedResources } from "./authentification/authConfig";
+import { compareIssuingPolicy } from "./utils/claimUtils";
+import AudioRecorder from "./components/Audio";
 import "./App.css";
 
 const Pages = () => {

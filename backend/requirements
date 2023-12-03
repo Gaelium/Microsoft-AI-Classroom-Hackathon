@@ -2,4 +2,5 @@ Flask
 flask-cors
 gunicorn
 Werkzeug
+azure-cosmos
 PyJWT
