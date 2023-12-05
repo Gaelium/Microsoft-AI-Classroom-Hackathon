@@ -9,6 +9,7 @@ import { b2cPolicies, protectedResources } from "./authentification/authConfig";
 import { compareIssuingPolicy } from "./utils/claimUtils";
 import AudioRecorder from "./components/Audio";
 import TestPage from "./pages/TestPage";
+import ClassPage from "./pages/ClassPage";
 import "./App.css";
 
 const Pages = () => {
@@ -132,7 +133,8 @@ const Pages = () => {
     <Routes>
       <Route path="/recorder" element={<AudioRecorder />} />
       <Route path="/test" element={<TestPage />} />
-      <Route path="/" element={<TestPage />} />
+      <Route path="/class/:classId" component={ClassPage} />
+      <Route path="/" element={<Home />} />
     </Routes>
   );
 };

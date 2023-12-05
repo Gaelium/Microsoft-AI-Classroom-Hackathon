@@ -5,6 +5,11 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  margin: 0;
+  padding: 0;
+  color: white; /* Sets the text color to white */
+  background: linear-gradient(160deg, #2d3436 0%, #000000 100%);
+  background-attachment: fixed;
 }
 
 code {

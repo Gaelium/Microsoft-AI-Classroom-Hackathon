@@ -1,4 +1,8 @@
-import { useMsal, AuthenticatedTemplate } from "@azure/msal-react";
+import {
+  useMsal,
+  AuthenticatedTemplate,
+  UnauthenticatedTemplate,
+} from "@azure/msal-react";
 import { Container } from "react-bootstrap";
 
 // import { IdTokenData } from "../components/DataDisplay";
@@ -23,6 +27,15 @@ export const Home = () => {
           </Container>
         ) : null}
       </AuthenticatedTemplate>
+      <UnauthenticatedTemplate>
+        <div className="app-name">EchoLearn</div>
+        <div className="unauthenticated-template">
+          <h5 className="card-title">
+            Ready to revolutionize the way you learn?
+          </h5>
+          <p className="card-text">Sign in to get started with EchoLearn!</p>
+        </div>
+      </UnauthenticatedTemplate>
     </>
   );
 };

@@ -57,3 +57,63 @@ footer {
 .profileButton {
   margin: 0.5rem 0.5rem;
 }
+
+.mainNavbar {
+  /*have butttons be side by side*/
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+.button-styled {
+  padding: 10px 25px;
+  border: none;
+  background-image: linear-gradient(to right, #ff758c 0%, #ff7eb3 100%);
+  color: white;
+  text-transform: uppercase;
+  font-weight: bold;
+  border-radius: 30px;
+  cursor: pointer;
+  outline: none;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease-in-out;
+}
+
+.button-styled:hover {
+  transform: scale(1.05);
+}
+
+.button-styled:active {
+  transform: scale(0.95);
+}
+
+.button-styled:focus {
+  outline: none;
+}
+
+.unauthenticated-template {
+  color: white;
+  text-align: center;
+  margin-top: -3%;
+}
+
+.unauthenticated-template h5 {
+  font-size: 2.5rem; /* Large text */
+  margin-bottom: 0.5rem;
+  font-weight: 300; /* Lighter font-weight */
+  letter-spacing: 0.05rem;
+}
+
+.unauthenticated-template p {
+  font-size: 1.25rem;
+  margin-bottom: 2rem;
+  font-weight: 300;
+}
+.app-name {
+  font-size: 8rem; /* Large text */
+  font-weight: bold; /* Bold text */
+  text-transform: uppercase;
+  letter-spacing: 0.5rem; /* Adjust the letter-spacing as needed */
+  text-align: center;
+  padding-top: 50px; /* Adjust this value as needed for your layout */
+  margin-bottom: 0.5rem;
+}

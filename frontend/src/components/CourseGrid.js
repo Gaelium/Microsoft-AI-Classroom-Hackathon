@@ -1,6 +1,6 @@
-import React from "react";
-
-const courses = [
+import React, { useState } from "react";
+import { Link } from "react-router-dom";
+const initialCourses = [
   { id: 1, name: "Physics", icon: "🏹" },
   { id: 2, name: "Chemistry", icon: "🧪" },
   { id: 3, name: "Calculus", icon: "🎢" },
@@ -12,21 +12,85 @@ const courses = [
   { id: 9, name: "Art", icon: "🖼️" },
 ];
 
-const navigateToTestPage = () => {
-  //navigate to test page
-};
 const CourseGrid = () => {
+  const [courses, setCourses] = useState(initialCourses);
+
+  // Function to add a new course
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [newCourseName, setNewCourseName] = useState("");
+
+  const addCourse = () => {
+    if (newCourseName) {
+      const newCourse = {
+        id: courses.length + 1,
+        name: newCourseName,
+        icon: "🆕",
+      };
+      setCourses([...courses, newCourse]);
+      setNewCourseName(""); // Reset input field
+      setIsModalOpen(false); // Close modal
+    }
+  };
+
+  const handleOpenModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+  };
+
+  const handleCourseNameChange = (e) => {
+    setNewCourseName(e.target.value);
+  };
+
   return (
     <div style={pageContainerStyle}>
       <div style={gridContainerStyle}>
         {courses.map((course) => (
-          <div key={course.id} style={gridItemStyle}>
-            <div style={iconStyle}>{course.icon}</div>
-            <div style={courseNameStyle}>{course.name}</div>
-          </div>
+          <Link
+            to={`/class/${course.id}`}
+            style={{ textDecoration: "none" }}
+            key={course.id}
+          >
+            <div style={gridItemStyle}>
+              <div style={iconStyle}>{course.icon}</div>
+              <div style={courseNameStyle}>{course.name}</div>
+            </div>
+          </Link>
         ))}
-        <button></button>
       </div>
+      <button
+        className="button-styled"
+        style={{ marginTop: "16px" }}
+        onClick={() => handleOpenModal()}
+      >
+        Add Course
+      </button>
+      {isModalOpen && (
+        <div style={modalStyle}>
+          <div style={modalContentStyle}>
+            <h4 style={{ color: "black" }}>Add a New Course</h4>
+            <input
+              type="text"
+              value={newCourseName}
+              onChange={handleCourseNameChange}
+              placeholder="Course Name"
+              style={inputStyle}
+            />
+            <button
+              className="button-styled"
+              style={{ marginBottom: "8px" }}
+              onClick={addCourse}
+            >
+              Save Course
+            </button>
+            <button className="button-styled" onClick={handleCloseModal}>
+              Cancel
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
@@ -37,6 +101,7 @@ const pageContainerStyle = {
   justifyContent: "center",
   alignItems: "center",
   padding: "50px",
+  flexDirection: "column",
 };
 
 const gridContainerStyle = {
@@ -53,6 +118,7 @@ const gridItemStyle = {
   padding: "16px",
   border: "1px solid #ccc",
   borderRadius: "8px",
+  background: "linear-gradient(to right, #fff5fc 0%, #fffef3 100%)",
   width: "80%", // Make each item take 80% of the width of its column
   maxWidth: "150px", // Set maximum width for each item
 };
@@ -64,6 +130,32 @@ const iconStyle = {
 const courseNameStyle = {
   marginTop: "8px",
   textAlign: "center",
+};
+const modalStyle = {
+  position: "fixed",
+  top: 0,
+  left: 0,
+  right: 0,
+  bottom: 0,
+  backgroundColor: "rgba(0, 0, 0, 0.5)",
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+};
+
+const modalContentStyle = {
+  backgroundColor: "#fff",
+  padding: "20px",
+  borderRadius: "5px",
+  display: "flex",
+  flexDirection: "column",
+  alignItems: "center",
+};
+
+const inputStyle = {
+  marginBottom: "10px",
+  padding: "10px",
+  width: "90%",
 };
 
 export default CourseGrid;

@@ -1,4 +1,4 @@
-import { Nav, Navbar, Dropdown, DropdownButton, Button } from "react-bootstrap";
+import { Navbar } from "react-bootstrap";
 import {
   AuthenticatedTemplate,
   UnauthenticatedTemplate,
@@ -34,35 +34,20 @@ export const NavigationBar = () => {
       <Navbar bg="primary" variant="dark" className="navbarStyle">
         <AuthenticatedTemplate>
           <div className="mainNavbar">
-            <Button
-              variant="info"
-              onClick={handleProfileEdit}
-              className="profileButton"
-            >
+            <button onClick={handleProfileEdit} className="button-styled">
               Edit Profile
-            </Button>
+            </button>
 
-            <DropdownButton 
-              onClick={handleLogoutRedirect}
-              variant="warning"
-              drop="start"
-              title={
-                activeAccount && activeAccount.username
-                  ? activeAccount.username
-                  : "Logout"
-              }
-            />
+            <button onClick={handleLogoutRedirect} className="button-styled">
+              Logout
+            </button>
           </div>
         </AuthenticatedTemplate>
         <UnauthenticatedTemplate>
           <div className="collapse navbar-collapse justify-content-end">
-            <DropdownButton
-              onClick={handleLoginRedirect}
-              variant="secondary"
-              className="ml-auto"
-              drop="start"
-              title="Sign In"
-            />
+            <button className="button-styled" onClick={handleLoginRedirect}>
+              Sign In
+            </button>
           </div>
         </UnauthenticatedTemplate>
       </Navbar>
