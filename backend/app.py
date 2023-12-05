@@ -25,7 +25,7 @@ from datetime import timedelta
 app.permanent_session_lifetime = timedelta(days=1)
 # Azure Cognitive Search setup
 search_service_name = "search-cap"
-index_name = "students"
+index_name = "azureblob-index"
 api_key = os.environ['SEARCH_API_KEY']
 
 search_client = SearchClient(endpoint=f"https://{search_service_name}.search.windows.net/",
@@ -73,7 +73,6 @@ def login():
     #set user_oid to session
     session["user_oid"] = user_oid
     session.modified = True
-    print(session["user_oid"])
     user_collection = get_user_collection(user_oid)
 
 
@@ -150,6 +149,7 @@ def upload_material():
         return 'No file part', 400
 
     user_oid = session.get('user_oid')
+    print("user_oid")
     print(user_oid)
     class_id = session.get('class_id')
     material_file = request.files['file']
@@ -196,10 +196,15 @@ def validate_answer():
     question = data.get('question')
     user_answer = data.get('answer')
     user_oid = session.get('user_oid')
+    class_id = session.get('class_id')
+    # for file in blob_container_client.list_blobs():
+    blob_list = blob_container_client.list_blobs(name_starts_with=f"{user_oid}/")
+    for blob in blob_list:
+        print(blob.name)
 
+    folder_name = f"{user_oid}"
     # Step 1: Search for relevant materials using the question as the search query
-    search_results = search_client.search(search_text=question, filter=f"user_oid eq '{user_oid}'")
-
+    search_results = search_client.search(search_text=question, top=3, search_mode="any")
     # Step 2: Extract relevant content from search results
     relevant_content = extract_relevant_content(search_results)
 
@@ -211,10 +216,11 @@ def validate_answer():
 def extract_relevant_content(search_results):
     relevant_content = []
 
-    for result in search_results:
+    for i, result in enumerate(search_results):
         # Assuming 'content' field contains the main text of the material
         content = result.get('content', '') 
         if content:
+            print(f"Content from result {i}: {content}")
             relevant_content.append(content)
 
     # Combine all relevant contents into a single text block, or handle as needed
@@ -223,8 +229,39 @@ def extract_relevant_content(search_results):
     # Extract and return relevant content from search results
     # ...
 
+import bs4
+from langchain import hub
+from langchain.chat_models import ChatOpenAI
+from langchain.document_loaders import WebBaseLoader
+from langchain.embeddings import OpenAIEmbeddings
+from langchain.schema import StrOutputParser
+from langchain.schema.runnable import RunnablePassthrough
+from langchain.text_splitter import RecursiveCharacterTextSplitter
+from langchain.vectorstores import FAISS
+
 def langchain_validate_answer(question, answer, content):
     # Use Langchain to analyze the answer against the content
     # Return feedback
     # ...
-    return 'True'
+    text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=200)
+    splits = text_splitter.split_text(content)
+
+    vectorstore = FAISS.from_texts(splits, OpenAIEmbeddings())
+    retriever = vectorstore.as_retriever()
+
+    prompt = hub.pull("rlm/rag-prompt")
+    llm = ChatOpenAI(model_name="gpt-4-1106-preview", temperature=0)
+
+
+    def format_docs(docs):
+        return "\n\n".join(doc.page_content for doc in docs)
+
+
+    rag_chain = (
+        {"context": retriever | format_docs, "question": RunnablePassthrough()}
+        | prompt
+        | llm
+        | StrOutputParser()
+    )
+    feedback = rag_chain.invoke("Evaluate the answer to the question, respond with what the user got right and what they didn't. Question: " + question + "\n\n" + answer)
+    return feedback

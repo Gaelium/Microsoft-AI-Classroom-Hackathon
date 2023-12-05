@@ -6,5 +6,8 @@ azure-cosmos
 azure-cognitiveservices-speech
 azure-storage-blob
 azure-search-documents
+langchain
+openai
 PyJWT
+faiss-cpu
 soundfile
