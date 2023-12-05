@@ -8,6 +8,7 @@ import { Home } from "./pages/Home";
 import { b2cPolicies, protectedResources } from "./authentification/authConfig";
 import { compareIssuingPolicy } from "./utils/claimUtils";
 import AudioRecorder from "./components/Audio";
+import TestPage from "./pages/TestPage";
 import "./App.css";
 
 const Pages = () => {
@@ -129,7 +130,8 @@ const Pages = () => {
   return (
     <Routes>
       <Route path="/recorder" element={<AudioRecorder />} />
-      <Route path="/" element={<Home />} />
+      <Route path="/test" element={<TestPage />} />
+      <Route path="/" element={<TestPage />} />
     </Routes>
   );
 };

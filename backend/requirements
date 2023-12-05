@@ -4,5 +4,7 @@ gunicorn
 Werkzeug
 azure-cosmos
 azure-cognitiveservices-speech
+azure-storage-blob
+azure-search-documents
 PyJWT
 soundfile
