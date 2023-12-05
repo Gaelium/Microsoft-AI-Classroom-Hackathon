@@ -1,0 +1,48 @@
+.authenticated-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #324376 0%, #5e3173 50%, #201e40 100%);
+}
+
+.authenticated-content h1,
+.authenticated-content h2 {
+  color: #fff;
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+.authenticated-content form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  max-width: 500px;
+  margin-bottom: 1rem;
+}
+
+.authenticated-content input[type="text"],
+.authenticated-content textarea,
+.authenticated-content input[type="file"] {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 1rem;
+  border-radius: 5px;
+  border: 1px solid #ddd;
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+}
+
+.button-styled {
+  /* Styles from earlier button styling */
+  margin-top: 10px;
+  cursor: pointer;
+}
+
+/* In case you have a separate Audio component */
+.audio-component {
+  /* Styles for your audio component if needed */
+  margin-bottom: 1rem;
+}

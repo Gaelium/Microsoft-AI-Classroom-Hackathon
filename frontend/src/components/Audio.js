@@ -1,20 +1,18 @@
 import React, { useState } from "react";
 import { AudioRecorder } from "react-audio-voice-recorder";
 
-const Audio = () => {
+const Audio = ({ setAnswerText }) => {
   const [audioData, setAudioData] = useState(null);
 
-  const onStop = (audioData) => {
+  const onStop = async (audioData) => {
     // audioData contains blob and blobUrl
     setAudioData(audioData);
-    console.log("audioData", audioData);
   };
 
   const uploadAudio = async () => {
     if (audioData) {
       const formData = new FormData();
       formData.append("file", audioData, "voice.webm");
-
       try {
         const response = await fetch("http://127.0.0.1:5000/upload-audio", {
           method: "POST",
@@ -22,6 +20,8 @@ const Audio = () => {
         });
         if (response.ok) {
           console.log("Audio uploaded successfully.");
+          const responseData = await response.json();
+          setAnswerText(responseData);
         } else {
           console.error("Upload failed.");
         }
@@ -31,10 +31,13 @@ const Audio = () => {
     }
   };
 
+  React.useEffect(() => {
+    uploadAudio();
+  }, [audioData]);
+
   return (
     <div>
-      <AudioRecorder onRecordingComplete={onStop} downloadFileExtension="wav" />
-      {audioData && <button onClick={uploadAudio}>Upload Audio</button>}
+      <AudioRecorder onRecordingComplete={onStop} />
     </div>
   );
 };

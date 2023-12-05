@@ -12,6 +12,7 @@ import random
 from azure.storage.blob import BlobServiceClient
 from azure.core.credentials import AzureKeyCredential
 from azure.search.documents import SearchClient
+from datetime import datetime
 
 app = Flask(__name__)
 app.secret_key = os.environ['FLASK_SECRET_KEY']
@@ -82,11 +83,12 @@ def login():
 @app.route('/upload-audio', methods=['POST'])
 def upload_audio():
     if 'file' in request.files:
+        timestamp = datetime.now().strftime("%Y%m%d%H%M%S")
+
         audio_file = request.files['file']
         file_path = secure_filename(audio_file.filename)
         #save webm file
         audio_file.save(file_path)
-        print(audio_file)
         webm_audio = AudioSegment.from_file(file_path, format="webm")
         file_name = "output_filename.wav"
         # Export as .wav
@@ -97,14 +99,11 @@ def upload_audio():
 
         text = transcribe_audio(file_name)
         print(text)
-        return 'File uploaded successfully', 200
+        return jsonify(text), 200
     else:
         return 'No file found', 400
 
 
-# we are assuming we have an audio file
-@app.route('/transcribe-audio', methods=['POST'])
-@cross_origin(supports_credentials=True)
 def transcribe_audio(audio_file):
     subscription_key = os.environ["AUDIO"]
     region = os.environ["AUDIO_REGION"]
@@ -115,8 +114,6 @@ def transcribe_audio(audio_file):
     audio_config = speechsdk.audio.AudioConfig(filename=audio_file)
     speech_recognizer = speechsdk.SpeechRecognizer(speech_config=speech_config, audio_config=audio_config)
     result = speech_recognizer.recognize_once()
-    print("result")
-    print(result)
     if result.reason == speechsdk.ResultReason.RecognizedSpeech:
         return result.text
     elif result.reason == speechsdk.ResultReason.NoMatch:

@@ -133,7 +133,7 @@ const Pages = () => {
     <Routes>
       <Route path="/recorder" element={<AudioRecorder />} />
       <Route path="/test" element={<TestPage />} />
-      <Route path="/class/:classId" component={ClassPage} />
+      <Route path="/class/:classId" element={<ClassPage />} />
       <Route path="/" element={<Home />} />
     </Routes>
   );

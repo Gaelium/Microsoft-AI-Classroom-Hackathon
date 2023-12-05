@@ -8,7 +8,7 @@ body {
   margin: 0;
   padding: 0;
   color: white; /* Sets the text color to white */
-  background: linear-gradient(160deg, #2d3436 0%, #000000 100%);
+  background: linear-gradient(135deg, #324376 0%, #5e3173 50%, #201e40 100%);
   background-attachment: fixed;
 }
 
