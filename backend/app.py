@@ -2,13 +2,20 @@ from flask import Flask, request
 from flask_cors import CORS
 import jwt
 from flask import jsonify
-
+import soundfile
 app = Flask(__name__)
 CORS(app)
+if __name__ == '__main__':
+    app.run(debug=True)
 
-from azure.cosmos import CosmosClient, PartitionKey
+from azure.cosmos import exceptions, CosmosClient, PartitionKey
+import azure.cognitiveservices.speech as speechsdk
+from werkzeug.utils import secure_filename
 import os
+import wave
+from pydub import AudioSegment
 
+    
 # Azure Cosmos DB setup
 # url = os.environ['COSMOS_DB_URL']  # Replace with your Cosmos DB URL
 # key = os.environ['COSMOS_DB_KEY']  # Replace with your Cosmos DB key
@@ -49,9 +56,20 @@ def login():
 def upload_audio():
     if 'file' in request.files:
         audio_file = request.files['file']
-        # with this audio_file, feed it into speech to text using azure cognitive services:
-        # https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/rest-speech-to-text
-        # Save the file, process it, etc.
+        file_path = secure_filename(audio_file.filename)
+        #save webm file
+        audio_file.save(file_path)
+        print(audio_file)
+        webm_audio = AudioSegment.from_file(file_path, format="webm")
+        file_name = "output_filename.wav"
+        # Export as .wav
+        webm_audio.export(file_name, format="wav")
+
+        
+        #convert to wav file
+
+        text = transcribe_audio(file_name)
+        print(text)
         return 'File uploaded successfully', 200
     else:
         return 'No file found', 400
@@ -60,16 +78,17 @@ def upload_audio():
 # we are assuming we have an audio file
 @app.route('/transcribe-audio', methods=['POST'])
 def transcribe_audio(audio_file):
-    subscription_key = "YourSubscriptionKey"
-    region = "YourRegion"
+    subscription_key = os.environ["AUDIO"]
+    region = os.environ["AUDIO_REGION"]
     #subscription key comes from azure cognitive services
     #so an example request would be:
     #https://YourRegion.api.cognitive.microsoft.com/sts/v1.0/issuetoken
-    speech_config = speechsdk.SpeechConfig(subscription=subscription_key, region=region)
+    speech_config = speechsdk.SpeechConfig(subscription=subscription_key, region=region, speech_recognition_language="en-US")
     audio_config = speechsdk.audio.AudioConfig(filename=audio_file)
     speech_recognizer = speechsdk.SpeechRecognizer(speech_config=speech_config, audio_config=audio_config)
     result = speech_recognizer.recognize_once()
-
+    print("result")
+    print(result)
     if result.reason == speechsdk.ResultReason.RecognizedSpeech:
         return result.text
     elif result.reason == speechsdk.ResultReason.NoMatch:
@@ -79,6 +98,3 @@ def transcribe_audio(audio_file):
         return "Speech Recognition canceled: {}".format(cancellation_details.reason)
     return "Something went wrong"
 # so to test this function, we need to have an audio file
-    
-    
-
