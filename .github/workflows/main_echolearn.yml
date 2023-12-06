@@ -26,10 +26,11 @@ jobs:
         run: |
           python -m venv venv
           source venv/bin/activate
-        
+      
       - name: Install dependencies
         run: pip install -r requirements.txt
         working-directory: ./backend
+        
       # Optional: Add step to run tests here (PyTest, Django test suites, etc.)
 
       - name: Zip artifact for deployment
@@ -66,4 +67,4 @@ jobs:
         with:
           app-name: 'echolearn'
           slot-name: 'Production'
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_9D0C865A817342B5A51D4B5523886387 }}
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_C41E816D56554D138DE9962F8488C9B0 }}
